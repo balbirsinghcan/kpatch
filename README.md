@@ -29,6 +29,7 @@ Table of contents
 		- [Fedora](#fedora)
 		- [RHEL 7](#rhel-7)
 		- [CentOS 7](#centos-7)
+		- [Amazon Linux 2](#amzn-2)
 		- [Oracle Linux 7](#oracle-linux-7)
 		- [Ubuntu](#ubuntu)
 		- [Debian 9 (Stretch)](#debian-9-stretch)
@@ -152,6 +153,36 @@ sudo debuginfo-install kernel-${UNAME%.*}
 # optional, but highly recommended - enable EPEL 7
 sudo yum install ccache
 ccache --max-size=5G
+```
+
+#### Amazon Linux 2
+
+*NOTE: You'll need about 15GB of free disk space for the kpatch-build cache in
+`~/.kpatch` and for ccache.*
+
+Install the dependencies for compiling kpatch:
+
+```bash
+UNAME=$(uname -r)
+sudo yum install gcc kernel-devel-${UNAME%.*} elfutils elfutils-devel
+```
+
+Install the dependencies for the "kpatch-build" command:
+
+```bash
+sudo yum install pesign yum-utils zlib-devel \
+  binutils-devel newt-devel python-devel perl-ExtUtils-Embed \
+  audit-libs-devel numactl-devel pciutils-devel bison ncurses-devel
+
+sudo yum-builddep kernel-${UNAME%.*}
+sudo debuginfo-install kernel-${UNAME%.*}
+
+# optional, but highly recommended
+sudo yum install https://dl.fedoraproject.org/pub/epel/7/x86_64/Packages/c/ccache-3.3.4-1.el7.x86_64.rpm
+ccache --max-size=5G
+
+# optional, for kpatch-test
+sudo yum install patchutils
 ```
 
 #### Oracle Linux 7
